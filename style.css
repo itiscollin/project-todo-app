@@ -42,7 +42,7 @@ body{
     width: 100%;
 }
 
-.priority{
+.importance{
     margin-left: auto;
     color: #0000003f;
 }
@@ -51,19 +51,36 @@ button{
     padding: 1px 10px 1px 10px;
     border: none;
     border-radius: 5px;
+    cursor: pointer;
 }
 #add-todo-btn{
     color: white;
-    background-color: #1abc9c;
+    margin-left: 8px;
+    background-color: #34495e;
 }
 
-.del-btn{
-    background-color: #e74c3c;
+.complete-btn{
+    cursor: pointer;
+    background-color: #1abc9c;
+    color: white;
     color: #f9f9f9;
     margin-left: 5px;
 }
+.del-btn{
+    cursor: pointer;
+    margin-left: 5px;
+    animation-play-state: paused;
+}
+
+.del-btn img{  animation-play-state: paused;}
+
+.del-btn img:hover{
+    animation-play-state: running;
+}
+
 select {
     margin-left: 5px;
+    cursor: pointer;
 }
 
 form{
@@ -78,4 +95,25 @@ form input{
     border: none;
     width: 70%;
     background-color: #f8f8f8;
+}
+
+.filter{
+    margin-top: 1rem;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filter label{
+    padding-right: 1rem;
+}
+
+.completed p{
+    text-decoration: line-through;
+    color: #00000070;
+}
+
+.hidden{
+    display: none;
 }
