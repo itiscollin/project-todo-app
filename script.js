@@ -1,15 +1,18 @@
 // Array for todo List
 const todo = []
 let todoDOM = []
+let trash = []
+let trashDOM = []
 
 // DOM
 const addBtn = document.querySelector("#add-todo-btn")
-
 const newTodo = document.querySelector(".new-todo")
 const tasklist = document.querySelector(".tasklist")
 const rating = document.querySelector(".priority-num")
 let task = document.querySelectorAll(".task")
 const showCompletedBox = document.querySelector("#showCompleted")
+const deletedTodoBtn = document.querySelector("#DeletedTodo")
+const activeTodoBtn = document.querySelector("#ActiveTodo")
 
 
 // Add Button
@@ -26,7 +29,7 @@ function addTodo(){
         return;
     }
 
-    todo.push({title: value, isCompleted : false})
+    todo.push({title: value, isCompleted : false, isDeleted: false})
     console.log(todo);
     newTodo.value=""
     syncTodo()
@@ -39,9 +42,10 @@ function syncTodo() {
 
   // Clear existing tasks
   tasklist.innerHTML = "";
-  
-  //ToDo list for DOM
   todoDOM = []
+  if(activeTodoBtn.checked === true && deletedTodoBtn.checked === false){
+  //ToDo list for DOM
+ 
   // Check for completed/filter
       for(i = 0; i < todo.length; i++ )
       {
@@ -52,25 +56,19 @@ function syncTodo() {
         }
       }
   
-  // DOM Loop
+  // DOM Loop for Current Todo
+  
       for(j = 0; j < todoDOM.length; j++ ){
-
-
         let newTask = document.createElement('div');
         newTask.classList.add("task");
 
         newTask.innerHTML =
           `<p class="todo">${todoDOM[j].title}</p>
-          <span class="importance"> Importance: </span>
-          <select for="importance"> 
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-          </select>
+          <div class = "btnContainer">
           <button class="complete-btn">Complete</button>
-          <img class="del-btn" src="./Asset/icons8-trash.png">`;
+          <img class="trash-btn" src="./Asset/icons8-trash.png">
+          </div>
+          `;
 
         if (todoDOM[j].isCompleted === true && showCompletedBox.checked){
             newTask.classList.add("completed")
@@ -78,7 +76,33 @@ function syncTodo() {
         tasklist.append(newTask);
       }
       addCompleteBtnsEvent()
-      addDelBtnsEvent()
+      addTrashBtnsEvent()
+  }
+
+    if(activeTodoBtn.checked === false && deletedTodoBtn.checked === true){
+    
+      
+    // DOM Loop for Deleted Todo
+  
+    for(i = 0; i < trash.length; i++ ){
+      trashDOM.push(trash[i])
+    }
+    for(j = 0; j < trashDOM.length; j++){
+      let newTask = document.createElement('div');
+      newTask.classList.add("task");
+      newTask.innerHTML =
+        `<p class="todo">${trashDOM[j].title}</p>
+        <div class = "btnContainer">
+        <button class="undo-btn">Undo</button>
+        <img class="del-btn" src="./Asset/icons8-trash.png">
+        </div>
+        `;
+      
+      tasklist.append(newTask);
+     }
+     addUndoBtnsEvent()
+     addDelBtnsEvent()
+    }
 };
 
 // Add event listener for all complete buttons
@@ -92,13 +116,14 @@ let completeBtns = document.querySelectorAll(".complete-btn");
 }
   
 // Add event listener for all complete buttons
-function addDelBtnsEvent() {
-  const delBtn = document.querySelectorAll(".del-btn")
-  delBtn.forEach((delBtn, index) => {
-    delBtn.addEventListener("click", () => {
+function addTrashBtnsEvent() {
+  const trashBtn = document.querySelectorAll(".trash-btn")
+  trashBtn.forEach((trashBtn, index) => {
+    trashBtn.addEventListener("click", () => {
       {
         for (let j = 0; j < todo.length; j++) {
           if (todoDOM[index].title === todo[j].title) {
+            trash.push(todo[j])
             todo.splice(j, 1);
             todoDOM.splice(index, 1);
           }
@@ -109,6 +134,43 @@ function addDelBtnsEvent() {
     });
   });
 }
+
+function addDelBtnsEvent() {
+  const delBtn = document.querySelectorAll(".del-btn")
+  delBtn.forEach((delBtn, index) => {
+    delBtn.addEventListener("click", () => {
+      {
+        for (let j = 0; j < trash.length; j++) {
+          if (trashDOM[index].title === trash[j].title) {
+            trash.splice(j, 1);
+          }
+        }
+        trashDOM = []
+      }
+      console.log("DelButton pressed");
+      syncTodo()
+    });
+  });
+}
+
+
+function addUndoBtnsEvent(){
+const undoBtn = document.querySelectorAll(".undo-btn")
+undoBtn.forEach((undoBtn,index)=> {
+  undoBtn.addEventListener("click", ()=>{
+    console.log("undoBtn pressed");
+    for(let i = 0; i < trash.length; i++){
+      if(trashDOM[index].title === trash[i].title){
+        todo.push(trash[i])
+        trash.splice(i,1)
+      }
+      trashDOM = []
+      syncTodo()
+    }})
+  })
+}
+  
+
 
 
 
@@ -131,17 +193,21 @@ if(todoDOM[i].isCompleted === true)
 // If completed === true && checkBox === true => class + hide
 
 showCompletedBox.addEventListener("click", ()=>{
+  trashDOM = []
    syncTodo()
 })
 
-
 // Rating change
-// Trash
 
-// write to do -> update array object
-// for every todo -> sync -> append html
-// 
 
 window.addEventListener("load", ()=>{
     syncTodo()
+})
+
+activeTodoBtn.addEventListener("click", ()=>{
+  syncTodo()
+})
+deletedTodoBtn.addEventListener("click", ()=>{
+  trashDOM = []
+  syncTodo()
 })

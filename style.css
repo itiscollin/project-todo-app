@@ -32,6 +32,29 @@ body{
     
 }
 
+.subcontainer{
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.toggle-section{
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.toggle-section label{
+    margin-left: 5px;
+}
+
+#DeletedTodo{
+   margin-left: 1rem;
+}
+
+
 .tasklist{
     padding: 16px;
 }
@@ -40,6 +63,7 @@ body{
     display: flex;
     margin: 1rem;
     width: 100%;
+    justify-content: space-around;
 }
 
 .importance{
@@ -64,13 +88,20 @@ button{
     background-color: #1abc9c;
     color: white;
     color: #f9f9f9;
-    margin-left: 5px;
+    margin-left: auto;
+}
+
+.btnContainer{
+    display: flex;
+    justify-content: space-evenly;
 }
 .del-btn{
     cursor: pointer;
-    margin-left: 5px;
+    margin-left: auto;
     animation-play-state: paused;
 }
+
+
 
 .del-btn img{  animation-play-state: paused;}
 
@@ -99,7 +130,6 @@ form input{
 
 .filter{
     margin-top: 1rem;
-    
     display: flex;
     align-items: center;
     justify-content: center;
