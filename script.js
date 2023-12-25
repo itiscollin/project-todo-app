@@ -29,7 +29,7 @@ function addTodo(){
         return;
     }
 
-    todo.push({title: value, isCompleted : false, isDeleted: false})
+    todo.push({title: value, isCompleted : false, value: 1})
     console.log(todo);
     newTodo.value=""
     syncTodo()
@@ -65,18 +65,30 @@ function syncTodo() {
         newTask.innerHTML =
           `<p class="todo">${todoDOM[j].title}</p>
           <div class = "btnContainer">
+          <label for="importance"> Importance: </label>
+
+          <select name="importance" class="importance" >
+            <option value = "1"> 1 </option>
+            <option value = "2"> 2 </option>
+            <option value = "3"> 3 </option>
+            <option value = "4"> 4 </option>
+            <option value = "5"> 5 </option>
+          </select>
           <button class="complete-btn">Complete</button>
           <img class="trash-btn" src="./Asset/icons8-trash.png">
           </div>
           `;
+
 
         if (todoDOM[j].isCompleted === true && showCompletedBox.checked){
             newTask.classList.add("completed")
           }  
         tasklist.append(newTask);
       }
+      addImportanceEvent()
       addCompleteBtnsEvent()
       addTrashBtnsEvent()
+      updateImportance()
   }
 
     if(activeTodoBtn.checked === false && deletedTodoBtn.checked === true){
@@ -135,6 +147,7 @@ function addTrashBtnsEvent() {
   });
 }
 
+// Add event listener for delete buttons
 function addDelBtnsEvent() {
   const delBtn = document.querySelectorAll(".del-btn")
   delBtn.forEach((delBtn, index) => {
@@ -153,7 +166,7 @@ function addDelBtnsEvent() {
   });
 }
 
-
+// Add event listener for undo buttons
 function addUndoBtnsEvent(){
 const undoBtn = document.querySelectorAll(".undo-btn")
 undoBtn.forEach((undoBtn,index)=> {
@@ -170,7 +183,37 @@ undoBtn.forEach((undoBtn,index)=> {
   })
 }
   
+// Add event listener for value dropdown
+function addImportanceEvent() {
+  const importance = document.querySelectorAll(".importance");
+  importance.forEach((importance, index) => {
+    importance.addEventListener("change", () => {
+      todo[index].value = importance.value;
+      console.log(todo[index]);
+      sortImportance()
+    });
+  });
+}
 
+// Add Responsive rating dropdown
+
+function updateImportance() {
+  const importance = document.querySelectorAll(".importance");
+  importance.forEach((importance, index) => {
+      importance.value = todo[index].value;     
+    })
+  }
+  
+
+
+// choose rating => update rating in todo => match rating with DOM option => update DOM with rating
+
+// Re-arrange function 
+
+function sortImportance(){
+todo.sort((a,b) => b.value - a.value) 
+syncTodo()
+}
 
 
 
@@ -189,20 +232,18 @@ if(todoDOM[i].isCompleted === true)
 }
 
 
-// Hide Completed <-> Show completed
-// If completed === true && checkBox === true => class + hide
 
 showCompletedBox.addEventListener("click", ()=>{
   trashDOM = []
    syncTodo()
 })
 
-// Rating change
 
 
 window.addEventListener("load", ()=>{
     syncTodo()
 })
+
 
 activeTodoBtn.addEventListener("click", ()=>{
   syncTodo()
